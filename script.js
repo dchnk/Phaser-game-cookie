@@ -4,7 +4,7 @@ import Phaser from 'phaser';
 const config = {
   width: '1000',
   height: '1000',
-  title: 'Phaser Cookie Game + TS',
+  title: 'Phaser Cookie Game',
   type: Phaser.AUTO,
   parent: document.querySelector('.main'),
   scene: {
@@ -15,7 +15,7 @@ const config = {
   physics: {
     default: 'arcade',
     arcade: {
-      gravity: { y: 0 },
+      gravity: { y: 300 },
       debug: false
     }
   },
@@ -24,10 +24,11 @@ const config = {
 // const game = new Phaser.Game(config);
 new Phaser.Game(config);
 
-let player, platforms, cursors;
+let player, platforms, cursors, cookies;
 
 function preload() {
   this.load.image('map', './src/img/map.png');
+  this.load.image('cookie', './src/img/1.png');
   this.load.spritesheet('cook',
     './src/img/cook-sprite-full.png',
     { frameWidth: 60, frameHeight: 90 }
@@ -36,13 +37,29 @@ function preload() {
 
 function create() {
   this.add.image(-100, -100, 'map').setOrigin(0, 0);
-  console.log(this)
 
   platforms = this.physics.add.staticGroup();
 
   player = this.physics.add.sprite(500, 500, 'cook');
   // player.setBounce(0.2);
   player.setCollideWorldBounds(true);
+
+  cookies = this.physics.add.group({
+    key: 'cookie',
+    repeat: 11,
+    setXY: { x: 50, y: 0, stepX: 70 }
+  });
+
+  cookies.children.iterate(function (child) {
+    console.log(child)
+    child.scale = .2;
+  
+    child.setBounceY(Phaser.Math.FloatBetween(0.2, 0.4));
+    child.setCollideWorldBounds(true);
+
+  });
+  
+  this.physics.add.collider(cookies, player, () => {this.physics.pause();})
 
   this.anims.create({
     key: 'left',
@@ -53,7 +70,7 @@ function create() {
 
   this.anims.create({
     key: 'left-stop',
-    frames: [ { key: 'cook', frame: 14 } ],
+    frames: [{ key: 'cook', frame: 14 }],
     frameRate: 20,
   });
 
@@ -83,17 +100,33 @@ function create() {
 }
 
 function update() {
+  // console.log(cursors)
+  switch (cursors) {
+    case cursors.left.isDown:
+      console.log('left')
+      break;
+
+    default: break;
+  }
 
   if (cursors.left.isDown) {
     player.setVelocityX(-160);
 
     player.anims.play('left', true);
   }
+
   else if (cursors.right.isDown) {
     player.setVelocityX(160);
 
     player.anims.play('right', true);
   }
+
+  else if (cursors.right.isDown) {
+    player.setVelocityX(160);
+
+    player.anims.play('right', true);
+  }
+
   // else {
   //   player.setVelocityX(0);
 
@@ -103,4 +136,7 @@ function update() {
   if (cursors.up.isDown) {
     player.setVelocityY(-330);
   }
+
+
+
 }

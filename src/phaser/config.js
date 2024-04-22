@@ -1,4 +1,4 @@
-import scenes from './scenes/main/main';
+import main from './scenes/main/main';
 
 export let config = {
   width: '1000',
@@ -6,7 +6,7 @@ export let config = {
   title: 'Phaser Cookie Game',
   type: Phaser.AUTO,
   parent: document.querySelector('.main'),
-  scene: [...scenes],
+  scene: [main, ],
   physics: {
     default: 'arcade',
   },

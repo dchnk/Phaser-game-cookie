@@ -1,5 +1,7 @@
 import { create } from "./create";
 import { preload } from "./preload";
 import { update } from "./update";
-6
+
+let main = { create, preload, update };
+
 export default main;

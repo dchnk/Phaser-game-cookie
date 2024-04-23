@@ -1,7 +1,7 @@
 import MainScene from './scenes/mainScene';
 
 export let config = {
-  width: '100%',
+  width: '1000',
   height: '100%',
   title: 'Phaser Cookie Game',
   type: Phaser.AUTO,

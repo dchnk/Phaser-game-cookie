@@ -25,6 +25,10 @@ class MainScene extends Phaser.Scene {
     
     // Cоздаем персонажа по середине поля
     this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.centerY, 'hero');
+
+    this.cameras.main.startFollow(this.player)
+    console.log(this.gameMap)
+    this.cameras.main.setBounds(-100, -15, this.gameMap.mapImage.width, this.gameMap.mapImage.height)
     
     this.cursors = this.input.keyboard.createCursorKeys();
   }

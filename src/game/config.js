@@ -1,12 +1,12 @@
-import main from './scenes/main/main';
+import MainScene from './scenes/mainScene';
 
 export let config = {
-  width: '1000',
-  height: '1000',
+  width: '100%',
+  height: '100%',
   title: 'Phaser Cookie Game',
   type: Phaser.AUTO,
   parent: document.querySelector('.main'),
-  scene: [main, ],
+  scene: [MainScene],
   physics: {
     default: 'arcade',
   },

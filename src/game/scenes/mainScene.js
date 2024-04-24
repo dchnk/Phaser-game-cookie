@@ -10,8 +10,8 @@ class MainScene extends Phaser.Scene {
   preload() {
     // Загружаем статичные изображения
     this.load.image('map', '/src/game/assets/map.png');
-    this.load.image('cookie', '/src/game/assets/cookies/1.png');    
-    
+    this.load.image('cookie', '/src/game/assets/cookies/1.png');
+
     // Загружаем спрайты
     this.load.spritesheet('hero',
       '/src/game/assets/spritesheets/cook-sprite-full.png',
@@ -22,17 +22,18 @@ class MainScene extends Phaser.Scene {
   create() {
     // Создаем карту игрового мира
     this.gameMap = new GameMap(this, 'map');
-    
+    console.log(this)
     // Cоздаем персонажа по середине поля
     this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.centerY, 'hero');
 
     this.cameras.main.startFollow(this.player)
-    console.log(this.gameMap)
-    this.cameras.main.setBounds(-100, -15, this.gameMap.mapImage.width, this.gameMap.mapImage.height)
-    
+    // console.log(this.gameMap.mapImage)
+    // console.log(this.gameMap.mapImage.width, this.gameMap.mapImage.height)
+    // this.cameras.main.setBounds();
+
     this.cursors = this.input.keyboard.createCursorKeys();
   }
-  
+
   update() {
     this.player.update(this.cursors)
   }

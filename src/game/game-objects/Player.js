@@ -41,35 +41,38 @@ export default class Player extends Phaser.GameObjects.Sprite {
     },);
 
     this.scene.anims.create({
-      key: 'top',
+      key: 'down',
       frames: this.scene.anims.generateFrameNumbers(this.texture.key, { start: 1, end: 6 }),
       frameRate: 10,
       repeat: -1
     });
 
     this.scene.anims.create({
-      key: 'bottom',
+      key: 'up',
       frames: this.scene.anims.generateFrameNumbers(this.texture.key, { start: 8, end: 13 }),
       frameRate: 10,
       repeat: -1
     },);
+
+    this.scene.anims.create({
+      key: 'stop',
+      frames: this.scene.anims.generateFrameNumbers(this.texture.key, { start: 0 }),
+      frameRate: 10,
+    },);
   }
 
   update(cursors) {
-    // Сброс скоростей
-    this.body.setVelocityX(0);
-    this.body.setVelocityY(0);
-
     // Комбинации клавиш для диагонального движения
     if (cursors.left.isDown && cursors.up.isDown) {
-      this.moveDiagonal('left', 'up');
+      this.move('up-left');
     } else if (cursors.left.isDown && cursors.down.isDown) {
-      this.moveDiagonal('left', 'down');
+      this.move('down-left');
     } else if (cursors.right.isDown && cursors.up.isDown) {
-      this.moveDiagonal('right', 'up');
+      this.move('up-right');
     } else if (cursors.right.isDown && cursors.down.isDown) {
-      this.moveDiagonal('right', 'down');
+      this.move('down-right');
     }
+
     // Одиночные клавиши для прямого движения
     else if (cursors.left.isDown) {
       this.move('left');
@@ -80,96 +83,78 @@ export default class Player extends Phaser.GameObjects.Sprite {
     } else if (cursors.down.isDown) {
       this.move('down');
     } else {
-      // Остановка анимации и движения
-      this.anims.stop();
+      this.move('stop');
     }
 
+    // Нормализация скорости движения во всех напрвлениях
     this.body.velocity.normalize().scale(this.playerVelocity);
   }
 
-  move(direction) {
+  move(direction, impuls) {
+    // Сброс скоростей
+    this.body.setVelocityX(0);
+    this.body.setVelocityY(0);
+    
+    this.direction = direction;
+
+    if (impuls) {
+      this.body.setVelocityX(this.playerVelocity * impuls.x);
+      this.body.setVelocityY(this.playerVelocity * impuls.y * -1);
+      this.anims.play(direction, true);
+      return;
+    }   
+
+
     switch (direction) {
       case 'left':
         this.body.setVelocityX(-this.playerVelocity);
         this.anims.play('left', true);
         break;
+
       case 'right':
         this.body.setVelocityX(this.playerVelocity);
         this.anims.play('right', true);
         break;
+
       case 'up':
         this.body.setVelocityY(-this.playerVelocity);
-        this.anims.play('bottom', true); // Проверьте название анимации
+        this.anims.play('up', true);
         break;
+
       case 'down':
         this.body.setVelocityY(this.playerVelocity);
-        this.anims.play('top', true); // Проверьте название анимации
+        this.anims.play('down', true);
+        break;
+
+      case 'up-left':
+        this.body.setVelocityX(-this.playerVelocity);
+        this.body.setVelocityY(-this.playerVelocity);
+        this.anims.play('up', true);
+        break;
+
+      case 'up-right':
+        this.body.setVelocityX(this.playerVelocity);
+        this.body.setVelocityY(-this.playerVelocity);
+        this.anims.play('up', true);
+        break;
+
+      case 'down-left':
+        this.body.setVelocityX(-this.playerVelocity);
+        this.body.setVelocityY(this.playerVelocity);
+        this.anims.play('down', true);
+        break;
+
+      case 'down-right':
+        this.body.setVelocityX(this.playerVelocity);
+        this.body.setVelocityY(this.playerVelocity);
+        this.anims.play('down', true);
+        break;
+
+
+      default:
+        this.anims.play('stop', true)
+        this.anims.stop();
         break;
     }
   }
-
-  moveDiagonal(horizontal, vertical) {
-    this.move(horizontal);
-    this.move(vertical);
-  }
-
-  // update(cursors) {
-  //   // Управление игроком с помощью стрелок
-  //   if (cursors.left.isDown) {
-  //     this.body.setVelocityX(-this.playerVelocity);
-  //     this.direction = 'left';
-  //     this.anims.play('left', true);
-
-  //   } else if (cursors.right.isDown) {
-  //     this.body.setVelocityX(this.playerVelocity);
-  //     this.direction = 'right';
-  //     this.play('right', true);
-
-  //   } else if (cursors.down.isDown) {
-  //     this.body.setVelocityY(this.playerVelocity)
-  //     this.direction = 'top';
-  //     this.play('top', true);
-
-  //   } else if (cursors.up.isDown) {
-  //     this.body.setVelocityY(-this.playerVelocity);
-  //     this.direction = 'bottom';
-  //     this.play('bottom', true);
-
-  //   } else {
-  //     this.body.setVelocityX(0);
-  //     this.body.setVelocityY(0);
-  //     this.anims.stop();
-
-  //     switch (this.direction) {
-  //       case 'left':
-  //         break;
-
-  //       default: break;
-  //     }
-  //   }
-
-  //   if (cursors.up.isDown && cursors.left.isDown) {
-  //     this.body.setVelocityX(-this.playerVelocity);
-  //     this.body.setVelocityY(-this.playerVelocity);
-  //     this.direction = 'top';
-  //     this.anims.play('top', true);
-  //   } else if (cursors.down.isDown && cursors.left.isDown) {
-  //     this.body.setVelocityX(-this.playerVelocity);
-  //     this.body.setVelocityY(this.playerVelocity);
-  //     this.direction = 'bottom';
-  //     this.anims.play('bottom', true);
-  //   } else if (cursors.up.isDown && cursors.right.isDown) {
-  //     this.body.setVelocityX(this.playerVelocity);
-  //     this.body.setVelocityY(this.playerVelocity);
-  //     this.direction = 'top';
-  //     this.anims.play('top', true);
-  //   } else if (cursors.down.isDown && cursors.right.isDown) {
-  //     this.body.setVelocityX(this.playerVelocity);
-  //     this.body.setVelocityY(this.playerVelocity);
-  //     this.direction = 'top';
-  //     this.anims.play('top', true);
-  //   }
-
-  //   this.body.velocity.normalize().scale(this.playerVelocity);
-  // }
 }

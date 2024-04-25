@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import GameMap from '../game-objects/GameMap';
 import Player from '../game-objects/Player';
+import Joystick from '../utils/joystick';
 
 class MainScene extends Phaser.Scene {
   constructor() {
@@ -20,13 +21,16 @@ class MainScene extends Phaser.Scene {
   }
 
   create() {
+    // Создаем joystick
+    this.joystick = new Joystick();
+
     // Создаем карту игрового мира и центрируем ее
     this.gameMap = new GameMap(this, 'map');
     this.physics.world.setBounds(0, 0, 1200, 1200)
 
     // Cоздаем персонажа по середине поля
     this.player = new Player(this, this.gameMap.mapImage.width / 2, this.gameMap.mapImage.height / 2, 'hero');
-    
+
     // Добавляем коллизии между героем и стенами
     this.physics.add.collider(this.player, this.gameMap.walls);
 
@@ -38,7 +42,7 @@ class MainScene extends Phaser.Scene {
   }
 
   update() {
-    this.player.update(this.cursors)
+    this.joystick.active ? this.player.move(this.joystick.direction, this.joystick.impuls) : this.player.update(this.cursors);
   }
 }
 

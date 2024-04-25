@@ -10,6 +10,7 @@ export default class Joystick {
     this.w = 100;
     this.h = 100;
     this.r = this.w / 2;
+    this.direction = 'down';
 
 
     this.stick = {
@@ -36,7 +37,7 @@ export default class Joystick {
 
     this.nodes.stick.style.top = this.stick.y + 'px';
     this.nodes.stick.style.left = this.stick.x + 'px';
-    
+
     document.addEventListener('touchmove', (e) => {
       if (!this.active) return;
       this.m.x = e.touches[0].clientX - this.start.x;
@@ -54,6 +55,7 @@ export default class Joystick {
 
         this.nodes.stick.style.top = this.stick.y + 'px';
         this.nodes.stick.style.left = this.stick.x + 'px';
+        this.checkDirection()
         return;
       }
 
@@ -68,13 +70,15 @@ export default class Joystick {
 
       this.nodes.stick.style.top = this.stick.y + 'px';
       this.nodes.stick.style.left = this.stick.x + 'px';
+
+      this.checkDirection()
     })
 
     this.nodes.stick.addEventListener('touchstart', (e) => {
 
       this.start.x = e.touches[0].clientX;
       this.start.y = e.touches[0].clientY;
-      this.active = true;      
+      this.active = true;
     })
 
     document.addEventListener('touchend', (e) => {
@@ -107,6 +111,7 @@ export default class Joystick {
 
         this.nodes.stick.style.top = this.stick.y + 'px';
         this.nodes.stick.style.left = this.stick.x + 'px';
+        this.checkDirection()
         return;
       }
 
@@ -121,6 +126,8 @@ export default class Joystick {
 
       this.nodes.stick.style.top = this.stick.y + 'px';
       this.nodes.stick.style.left = this.stick.x + 'px';
+
+      this.checkDirection()
     })
 
     this.nodes.stick.addEventListener('mousedown', (e) => {
@@ -148,52 +155,25 @@ export default class Joystick {
     })
 
   }
-  
+
   checkDirection() {
-    if (!this.impuls) {
-      this.positions[this.direction].current = 0;
-      return;
-    }
-
-    if (impuls.x === 0 && impuls.y === 0) {
-      this.positions[this.direction].current = 0;
-      return;
-    }
-
-    if (impuls.x < 0 && Math.abs(impuls.x) - Math.abs(impuls.y) > 0) {
+    if (this.impuls.x < 0 && Math.abs(this.impuls.x) - Math.abs(this.impuls.y) > 0) {
       this.direction = 'left';
-      this.positions.left.current += 1;
-      if (this.positions.left.current > 6) {
-        return this.positions.left.current = 1;
-      }
-
       return;
     }
 
-    if (impuls.x > 0 && Math.abs(impuls.x) - Math.abs(impuls.y) > 0) {
+    if (this.impuls.x > 0 && Math.abs(this.impuls.x) - Math.abs(this.impuls.y) > 0) {
       this.direction = 'right';
-      this.positions.right.current += 1;
-      if (this.positions.right.current > 6) {
-        return this.positions.right.current = 1;
-      }
       return;
     }
 
-    if (impuls.y > 0) {
-      this.direction = 'top';
-      this.positions.top.current += 1;
-      if (this.positions.top.current > 6) {
-        return this.positions.top.current = 1;
-      }
+    if (this.impuls.y > 0) {
+      this.direction = 'up';
       return;
     }
 
-    if (impuls.y < 0) {
-      this.direction = 'bottom';
-      this.positions.bottom.current += 1;
-      if (this.positions.bottom.current > 6) {
-        return this.positions.bottom.current = 1;
-      }
+    if (this.impuls.y < 0) {
+      this.direction = 'down';
       return;
     }
 

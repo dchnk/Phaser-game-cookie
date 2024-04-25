@@ -94,15 +94,21 @@ export default class Player extends Phaser.GameObjects.Sprite {
     // Сброс скоростей
     this.body.setVelocityX(0);
     this.body.setVelocityY(0);
-    
+
     this.direction = direction;
 
     if (impuls) {
+      if (impuls.x + impuls.y === 0) {
+        this.anims.play('stop', true);
+        this.anims.stop();
+        return;
+      };
+
       this.body.setVelocityX(this.playerVelocity * impuls.x);
       this.body.setVelocityY(this.playerVelocity * impuls.y * -1);
       this.anims.play(direction, true);
       return;
-    }   
+    }
 
 
     switch (direction) {

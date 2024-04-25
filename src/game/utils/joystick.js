@@ -74,7 +74,18 @@ export default class Joystick {
       this.checkDirection()
     })
 
-    this.nodes.stick.addEventListener('touchstart', (e) => {
+    // this.nodes.stick.addEventListener('touchstart', (e) => {
+    //   this.nodes.joystick.classList.add('active');
+
+    //   this.start.x = e.touches[0].clientX;
+    //   this.start.y = e.touches[0].clientY;
+    //   this.active = true;
+    // })
+
+    document.addEventListener('touchstart', (e) => {
+      this.nodes.joystick.classList.add('active');
+      this.nodes.joystick.style.top = e.touches[0].clientY - this.nodes.stick.clientWidth + 'px';
+      this.nodes.joystick.style.left = e.touches[0].clientX - this.nodes.stick.clientWidth + 'px';
 
       this.start.x = e.touches[0].clientX;
       this.start.y = e.touches[0].clientY;
@@ -82,6 +93,8 @@ export default class Joystick {
     })
 
     document.addEventListener('touchend', (e) => {
+      this.nodes.joystick.classList.remove('active');
+
       this.stick.x = 25;
       this.stick.y = 25;
 
@@ -130,7 +143,10 @@ export default class Joystick {
       this.checkDirection()
     })
 
-    this.nodes.stick.addEventListener('mousedown', (e) => {
+    document.addEventListener('mousedown', (e) => {
+      this.nodes.joystick.classList.add('active');
+      this.nodes.joystick.style.top = e.clientY - this.nodes.stick.clientWidth + 'px';
+      this.nodes.joystick.style.left = e.clientX - this.nodes.stick.clientWidth + 'px';
       // console.log('Мышка нажата')
 
       this.start.x = e.clientX;
@@ -139,6 +155,8 @@ export default class Joystick {
     })
 
     document.addEventListener('mouseup', (e) => {
+      this.nodes.joystick.classList.remove('active');
+
       // console.log('Мышка отпущена')
       this.stick.x = 25;
       this.stick.y = 25;

@@ -16,7 +16,12 @@ body {
   bottom: 5%;
   right: 5%;
   border-radius: 100%;
-  background-color: rgba(255, 216, 98, 0.555);
+  opacity: 0;
+  transition: opacity .5s ease-out;
+}
+
+.active {
+  opacity: 1;
 }
 
 .joystick__content {
@@ -29,5 +34,5 @@ body {
   height: 50px;
   width: 50px;
   border-radius: 100%;
-  background-color: rgba(19, 19, 19, 0.76);
+  background-color: rgba(0, 0, 0, 0.4);
 }

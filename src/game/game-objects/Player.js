@@ -17,6 +17,12 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
     // Устанавливаем параметры игрока
     this.body.setBounce(0.2);
+    
+    // Изменение размеров коллизии персонажа
+    this.body.setSize(60, 20, false);
+    
+    // Смещение коллизии персонажа по оси y
+    this.body.setOffset(0, 70);
   }
 
   initAnimations() {

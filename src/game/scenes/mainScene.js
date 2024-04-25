@@ -20,16 +20,19 @@ class MainScene extends Phaser.Scene {
   }
 
   create() {
-    // Создаем карту игрового мира
+    // Создаем карту игрового мира и центрируем ее
     this.gameMap = new GameMap(this, 'map');
-    console.log(this)
-    // Cоздаем персонажа по середине поля
-    this.player = new Player(this, this.cameras.main.centerX, this.cameras.main.centerY, 'hero');
+    this.physics.world.setBounds(0, 0, 1200, 1200)
 
-    this.cameras.main.startFollow(this.player)
-    // console.log(this.gameMap.mapImage)
-    // console.log(this.gameMap.mapImage.width, this.gameMap.mapImage.height)
-    // this.cameras.main.setBounds();
+    // Cоздаем персонажа по середине поля
+    this.player = new Player(this, this.gameMap.mapImage.width / 2, this.gameMap.mapImage.height / 2, 'hero');
+    
+    // Добавляем коллизии между героем и стенами
+    this.physics.add.collider(this.player, this.gameMap.walls);
+
+    // Закрепляем камеру на персонаже и ограничиваем ее размерами карты
+    this.cameras.main.startFollow(this.player);
+    this.cameras.main.setBounds(this.gameMap.x, this.gameMap.y, this.gameMap.width, this.gameMap.height);
 
     this.cursors = this.input.keyboard.createCursorKeys();
   }

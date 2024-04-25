@@ -3,27 +3,19 @@ import MainScene from './scenes/mainScene';
 let windowHeight = window.innerHeight;
 let windowWidth = window.innerWidth;
 
+if (windowHeight < windowWidth) windowWidth = windowHeight;
 
-windowHeight = windowHeight > 1000 ? 1000 : windowHeight;
-windowWidth = windowWidth > 1000 ? 1000 : windowWidth;
+if (windowHeight > windowWidth && window.innerWidth > 1200) windowHeight = windowWidth;
 
 
-console.log(windowWidth)
 export let config = {
-  type: Phaser.AUTO,
-  // height: windowHeight.toString(),
-  // width: windowWidth.toString(),
+  type: Phaser.AUTO,  
+  height: windowHeight,
+  width: windowWidth,
   scale: {
-    mode: Phaser.Scale.FIT, // Будет масштабировать игровую область для заполнения всего экрана
-    width: windowWidth.toString(),
-    height: '100%',
+    mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    
   },
-  // scale: {
-  //   mode: Phaser.Scale.FIT,
-  //   autoCenter: Phaser.Scale.CENTER_BOTH,
-  // },
   parent: document.querySelector('.main'),
   scene: [MainScene],
   physics: {
@@ -31,6 +23,6 @@ export let config = {
     arcade: {
       debug: true
     }
-    
+
   },
 }

@@ -10,12 +10,12 @@ class MainScene extends Phaser.Scene {
 
   preload() {
     // Загружаем статичные изображения
-    this.load.image('map', '/src/game/assets/map.png');
-    this.load.image('cookie', '/src/game/assets/cookies/1.png');
+    this.load.image('map', 'src/game/assets/map.png');
+    this.load.image('cookie', 'src/game/assets/cookies/1.png');
 
     // Загружаем спрайты
     this.load.spritesheet('hero',
-      '/src/game/assets/spritesheets/cook-sprite-full.png',
+      'src/game/assets/spritesheets/cook-sprite-full.png',
       { frameWidth: 60, frameHeight: 90 }
     );
   }

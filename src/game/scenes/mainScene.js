@@ -24,6 +24,9 @@ class MainScene extends Phaser.Scene {
     // Создаем joystick
     this.joystick = new Joystick();
 
+    // Указываем первоначальное состояние зума
+    this.cameras.main.setZoom(1);
+
     // Создаем карту игрового мира и центрируем ее
     this.gameMap = new GameMap(this, 'map');
     this.physics.world.setBounds(0, 0, 1200, 1200)
@@ -43,6 +46,7 @@ class MainScene extends Phaser.Scene {
 
   update() {
     this.joystick.active ? this.player.move(this.joystick.direction, this.joystick.impuls) : this.player.update(this.cursors);
+    this.player.isMoving ? this.cameras.main.zoomTo(0.9, 100, 'Sine.easeInOut') : this.cameras.main.zoomTo(1, 200,'Sine.easeIn');
   }
 }
 

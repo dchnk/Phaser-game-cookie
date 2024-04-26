@@ -4,6 +4,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
     this.playerVelocity = 160;
     this.direction = 'bottom';
+    this.isMoving = false;
 
     // Добавляем игрока в сцену
     scene.add.existing(this);
@@ -91,6 +92,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
   }
 
   move(direction, impuls) {
+    this.isMoving = direction === 'stop' ? false : true;
+  
     // Сброс скоростей
     this.body.setVelocityX(0);
     this.body.setVelocityY(0);

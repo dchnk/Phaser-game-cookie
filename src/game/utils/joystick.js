@@ -2,7 +2,7 @@ export default class Joystick {
   constructor() {
     this.nodes = {
       joystick: document.querySelector('.joystick'),
-      stick: document.querySelector('.stick')
+      stick: document.querySelector('.stick'),
     };
     this.active = false;
     this.x = 0;
@@ -59,14 +59,11 @@ export default class Joystick {
         return;
       }
 
-
       this.stick.x = this.stick.cx + this.m.x;
       this.stick.y = this.stick.cy + this.m.y;
 
-
       this.impuls.x = (this.stick.cx - this.stick.x) * -1 / this.r;
       this.impuls.y = (this.stick.cy - this.stick.y) / this.r;
-
 
       this.nodes.stick.style.top = this.stick.y + 'px';
       this.nodes.stick.style.left = this.stick.x + 'px';
@@ -145,8 +142,8 @@ export default class Joystick {
 
     document.addEventListener('mousedown', (e) => {
       this.nodes.joystick.classList.add('active');
-      this.nodes.joystick.style.top = e.clientY - this.nodes.stick.clientWidth + 'px';
-      this.nodes.joystick.style.left = e.clientX - this.nodes.stick.clientWidth + 'px';
+      this.nodes.joystick.style.top = e.offsetY - this.nodes.stick.clientWidth + 'px';
+      this.nodes.joystick.style.left = e.offsetX - this.nodes.stick.clientWidth + 'px';
       // console.log('Мышка нажата')
 
       this.start.x = e.clientX;
@@ -156,6 +153,9 @@ export default class Joystick {
 
     document.addEventListener('mouseup', (e) => {
       this.nodes.joystick.classList.remove('active');
+      
+      this.nodes.joystick.style.top = '85%';
+      this.nodes.joystick.style.left = '85%';
 
       // console.log('Мышка отпущена')
       this.stick.x = 25;

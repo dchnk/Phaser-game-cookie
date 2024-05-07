@@ -3,8 +3,7 @@ body {
 }
 
 .main {
-  width: 100%;
-  height: 100vh;
+  margin: auto;
   overflow: hidden;
   position: relative;
 }
@@ -13,15 +12,18 @@ body {
   position: absolute;
   height: 100px;
   width: 100px;
-  bottom: 5%;
-  right: 5%;
+  top: 85%;
+  left: 85%;
   border-radius: 100%;
-  opacity: 0;
+  opacity: 0.8;
+  background-color: rgba(0, 0, 0, 0.2);
   transition: opacity .5s ease-out;
+  pointer-events: none;
 }
 
 .active {
-  opacity: 1;
+  opacity: 1;  
+  
 }
 
 .joystick__content {

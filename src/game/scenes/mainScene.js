@@ -29,7 +29,9 @@ class MainScene extends Phaser.Scene {
 
     // Создаем карту игрового мира и центрируем ее
     this.gameMap = new GameMap(this, 'map');
-    this.physics.world.setBounds(0, 0, 1200, 1200)
+
+    // Жестко указываем границы игрового поля
+    this.physics.world.setBounds(0, 0, this.gameMap.width, this.gameMap.height);
 
     // Cоздаем персонажа по середине поля
     this.player = new Player(this, this.gameMap.mapImage.width / 2, this.gameMap.mapImage.height / 2, 'hero');
@@ -46,7 +48,7 @@ class MainScene extends Phaser.Scene {
 
   update() {
     this.joystick.active ? this.player.move(this.joystick.direction, this.joystick.impuls) : this.player.update(this.cursors);
-    this.player.isMoving ? this.cameras.main.zoomTo(0.9, 100, 'Sine.easeInOut') : this.cameras.main.zoomTo(1, 200,'Sine.easeIn');
+    // this.player.isMoving ? this.cameras.main.zoomTo(0.9, 100, 'Sine.easeInOut') : this.cameras.main.zoomTo(1, 200,'Sine.easeIn');
   }
 }
 

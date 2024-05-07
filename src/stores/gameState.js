@@ -14,6 +14,7 @@ export const gameState = {
   setCursors(newCursors) {
     cursors = newCursors;
   },
+  
   getCursors() {
     return cursors;
   },

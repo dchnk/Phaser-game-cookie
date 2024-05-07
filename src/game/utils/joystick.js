@@ -91,6 +91,11 @@ export default class Joystick {
 
     document.addEventListener('touchend', (e) => {
       this.nodes.joystick.classList.remove('active');
+      
+      this.nodes.joystick.style.top = null;
+      this.nodes.joystick.style.left = null;
+      this.nodes.joystick.style.right = '5%';
+      this.nodes.joystick.style.bottom = '5%';
 
       this.stick.x = 25;
       this.stick.y = 25;
@@ -153,9 +158,11 @@ export default class Joystick {
 
     document.addEventListener('mouseup', (e) => {
       this.nodes.joystick.classList.remove('active');
-      
-      this.nodes.joystick.style.top = '85%';
-      this.nodes.joystick.style.left = '85%';
+
+      this.nodes.joystick.style.top = null;
+      this.nodes.joystick.style.left = null;
+      this.nodes.joystick.style.right = '5%';
+      this.nodes.joystick.style.bottom = '5%';
 
       // console.log('Мышка отпущена')
       this.stick.x = 25;

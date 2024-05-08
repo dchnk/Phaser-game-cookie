@@ -61,8 +61,8 @@ class MainScene extends Phaser.Scene {
   }
 
   createCookie() {
-    const x = Phaser.Math.Between(this.gameMap.mapGameArea.endX, this.gameMap.mapGameArea.endX);
-    const y = Phaser.Math.Between(this.gameMap.mapGameArea.startY, this.gameMap.mapGameArea.endY);
+    const x = Phaser.Math.Between(this.gameMap.cookiesArea.startX, this.gameMap.cookiesArea.endX);
+    const y = Phaser.Math.Between(this.gameMap.cookiesArea.startY, this.gameMap.cookiesArea.endY);
     const cookie = new Cookie(this, x, y, 'cookie');
 
     this.physics.add.overlap(this.player, cookie, () => {

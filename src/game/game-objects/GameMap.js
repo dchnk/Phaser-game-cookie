@@ -17,11 +17,11 @@ export default class GameMap {
       endY: 935
     }
     
-    this.mapGameArea = {
+    this.cookiesArea = {
       startX: 300,
       endX: 900,
-      startY: 265,
-      endY: 900
+      startY: 190,
+      endY: 800
     }
     
     this.walls = this.createWalls();

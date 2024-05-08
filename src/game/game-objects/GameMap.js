@@ -17,6 +17,13 @@ export default class GameMap {
       endY: 935
     }
     
+    this.mapGameArea = {
+      startX: 300,
+      endX: 900,
+      startY: 265,
+      endY: 900
+    }
+    
     this.walls = this.createWalls();
 
   }

@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import GameMap from '../game-objects/GameMap';
 import Player from '../game-objects/Player';
 import Joystick from '../utils/joystick';
+import Cookie from '../game-objects/Cookie';
 
 class MainScene extends Phaser.Scene {
   constructor() {
@@ -35,6 +36,10 @@ class MainScene extends Phaser.Scene {
 
     // Cоздаем персонажа по середине поля
     this.player = new Player(this, this.gameMap.mapImage.width / 2, this.gameMap.mapImage.height / 2, 'hero');
+    
+    // Устанавливаем глубину отрисовки, чтобы персонаж всегда отрисовывался поверх всех слоев
+    
+    this.player.setDepth(10);
 
     // Добавляем коллизии между героем и стенами
     this.physics.add.collider(this.player, this.gameMap.walls);
@@ -43,12 +48,33 @@ class MainScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player);
     this.cameras.main.setBounds(this.gameMap.x, this.gameMap.y, this.gameMap.width, this.gameMap.height);
 
+    // Создаем печеньку
+
+    this.createCookie();
+
     this.cursors = this.input.keyboard.createCursorKeys();
   }
 
   update() {
     this.joystick.active ? this.player.move(this.joystick.direction, this.joystick.impuls) : this.player.update(this.cursors);
     // this.player.isMoving ? this.cameras.main.zoomTo(0.9, 100, 'Sine.easeInOut') : this.cameras.main.zoomTo(1, 200,'Sine.easeIn');
+  }
+
+  createCookie() {
+    const x = Phaser.Math.Between(this.gameMap.mapGameArea.endX, this.gameMap.mapGameArea.endX);
+    const y = Phaser.Math.Between(this.gameMap.mapGameArea.startY, this.gameMap.mapGameArea.endY);
+    const cookie = new Cookie(this, x, y, 'cookie');
+
+    this.physics.add.overlap(this.player, cookie, () => {
+      cookie.collect();  // Сбор печеньки
+    });
+
+    // Создание таймера для регулярного создания печеньек
+    this.time.addEvent({
+      delay: 3000, // Генерация каждые 10 секунд
+      callback: this.createCookie,
+      callbackScope: this,
+    });
   }
 }
 

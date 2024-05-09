@@ -36,9 +36,14 @@ class MainScene extends Phaser.Scene {
 
     // Cоздаем персонажа по середине поля
     this.player = new Player(this, this.gameMap.mapImage.width / 2, this.gameMap.mapImage.height / 2, 'hero');
-    
+
+    // Создаем физическую группу для печенек
+    this.cookies = this.physics.add.group({
+      classType: Cookie,
+    });
+
     // Устанавливаем глубину отрисовки, чтобы персонаж всегда отрисовывался поверх всех слоев
-    
+
     this.player.setDepth(10);
 
     // Добавляем коллизии между героем и стенами
@@ -52,29 +57,79 @@ class MainScene extends Phaser.Scene {
 
     this.createCookie();
 
+
+    // Создание таймера для регулярного создания печеньек
+    this.time.addEvent({
+      delay: 3000, // Генерация каждые 3 секунды
+      callback: this.createCookie,
+      callbackScope: this,
+      loop: true,
+    });
+
+    this.physics.add.overlap(this.player, this.cookies, this.collectCookie, null, this)
+
+    // this.physics.add.collider(this.cookies, this.cookies);
+
+    this.physics.add.collider(this.cookies, this.cookies, (cookie1, cookie2) => {
+      // Расчитаем расстояние и направление от центра взрыва до объекта
+      const distance = Phaser.Math.Distance.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
+      console.log(distance)
+      if (distance < 100) {
+          console.log('12')
+          // Рассчитаем величину взрывной силы
+          const power = 20; // Например, можно указать любую другую величину
+          // Рассчитаем угол направления отталкивания
+          const angle = Phaser.Math.Angle.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
+          // Применяем силу к объекту
+          this.physics.velocityFromRotation(angle, power, cookie2.body.velocity);
+      }
+  });
+    this.physics.add.collider(this.cookies, this.gameMap.walls);
+    this.physics.add.collider(this.player, this.cookies);
+
     this.cursors = this.input.keyboard.createCursorKeys();
   }
 
   update() {
     this.joystick.active ? this.player.move(this.joystick.direction, this.joystick.impuls) : this.player.update(this.cursors);
     // this.player.isMoving ? this.cameras.main.zoomTo(0.9, 100, 'Sine.easeInOut') : this.cameras.main.zoomTo(1, 200,'Sine.easeIn');
+
+
+
+    // if (this.player.heldCookie) {
+
+    //   console.log(this.player.heldCookie)
+
+    //   this.player.heldCookie.stopFadeOut()
+
+    //   // Обновляем позицию печеньки, чтобы она следовала за персонажем
+    //   this.player.heldCookie.x = this.player.x - 30;
+    //   this.player.heldCookie.y = this.player.y + 10; // Смещение на 20 пикселей выше центра персонажа
+    // }
   }
 
   createCookie() {
-    const x = Phaser.Math.Between(this.gameMap.cookiesArea.startX, this.gameMap.cookiesArea.endX);
-    const y = Phaser.Math.Between(this.gameMap.cookiesArea.startY, this.gameMap.cookiesArea.endY);
-    const cookie = new Cookie(this, x, y, 'cookie');
+    if (this.cookies.children.size > 3) return;
 
-    this.physics.add.overlap(this.player, cookie, () => {
-      cookie.collect();  // Сбор печеньки
-    });
+    // const x = Phaser.Math.Between(this.gameMap.cookiesArea.startX, this.gameMap.cookiesArea.endX);
+    // const y = Phaser.Math.Between(this.gameMap.cookiesArea.startY, this.gameMap.cookiesArea.endY);
 
-    // Создание таймера для регулярного создания печеньек
-    this.time.addEvent({
-      delay: 3000, // Генерация каждые 10 секунд
-      callback: this.createCookie,
-      callbackScope: this,
-    });
+    const x = Phaser.Math.Between(450, 500);
+    const y = Phaser.Math.Between(450, 500);
+
+    this.cookies.add(new Cookie(this, x, y, 'cookie'));
+
+
+  }
+
+  collectCookie(player, cookie) {
+
+
+    if (!cookie.animateIsDone) return;
+    if (this.player.heldCookie) return;
+
+    // Сохраняем ссылку на "собранную" печеньку в свойствах персонажа
+    player.heldCookie = cookie;
   }
 }
 

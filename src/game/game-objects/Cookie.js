@@ -4,30 +4,33 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
 
     this.scene = scene;
     // время жизни в миллисекундах
-    this.lifetime = 7000;
+    this.lifetime = 15000;
     // отслеживаем время исчезновения
     this.fadeTime = this.lifetime - 5000;
 
-    // Флаг завершения анимации    
+    this.fadeOutAnimation = null;
+
+    // Флаг завершения анимации
     this.animateIsDone = false;
 
     // Задаём начальные параметры физики
     scene.physics.world.enable(this);
     scene.add.existing(this);
 
-    this.setScale(.2);
-
+    this.body.setCircle(1, 0, 0);
     // Запуск анимации появления
     this.show();
 
     // Таймер отсчета времени жизни и исчезновения
-    this.startLifeTimer();
+    // this.startLifeTimer();
+
+
   }
 
   // Показывает анимацию появления
   show() {
     this.setAlpha(0);
-    this.setScale(1.5)
+    this.setScale(2);
     this.scene.tweens.add({
       targets: this,
       y: `+=100`, // Эффект падения
@@ -36,15 +39,25 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
       scale: .18,
 
       onComplete: () => {
+        this.setScale(.2)
+        this.body.setCircle(100, 0, 0);
+        this.body.setBounce(1, 1)
+        this.body.setDrag(50, 50)
+        // this.body.setVelocity(0, -20)
+        this.body.setMass(1);
+       
+
         this.bounce()
         this.setAlpha(1); // Установить непрозрачность после завершения анимации.        
       }
     });
   }
 
+
+
   bounce() {
     this.scene.tweens.add({
-      y: `+=5`,
+      y: `+=15`,
       scale: .2,
       targets: this,
       duration: 600,
@@ -64,10 +77,12 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
   }
 
   // Исчезновение печеньки
-  fadeOut() {
-    if (!this.scene) return;
 
-    this.scene.tweens.add({
+
+  fadeOut() {
+    // if (!this.scene) return;
+
+    this.fadeOutAnimation = this.scene.tweens.add({
       targets: this,
       alpha: 0.3,
       duration: 1000,
@@ -79,8 +94,8 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
   }
 
   fadeAway() {
-    if (!this.scene) return;
-  
+    // if (!this.scene) return;
+
     this.scene.tweens.add({
       targets: this,
       alpha: 0,
@@ -90,6 +105,15 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
         this.destroy();
       }
     });
+  }
+
+  stopFadeOut() {
+    if (this.fadeOutAnimation && this.fadeOutAnimation.isPlaying()) {
+      this.fadeOutAnimation.stop(); // Останавливаем анимацию исчезновения
+
+      // Возвращаем прозрачность к первоначальному состоянию если нужно
+      this.setAlpha(1);
+    }
   }
 
   // Вызывается при сборе печеньки персонажем

@@ -81,6 +81,7 @@ class MainScene extends Phaser.Scene {
           // Рассчитаем угол направления отталкивания
           const angle = Phaser.Math.Angle.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
           // Применяем силу к объекту
+          this.physics.velocityFromRotation(-angle, -power, cookie1.body.velocity);
           this.physics.velocityFromRotation(angle, power, cookie2.body.velocity);
       }
   });

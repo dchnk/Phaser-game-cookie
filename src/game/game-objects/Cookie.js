@@ -43,7 +43,6 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
         this.body.setCircle(100, 0, 0);
         this.body.setBounce(1, 1)
         this.body.setDrag(50, 50)
-        // this.body.setVelocity(0, -20)
         this.body.setMass(1);
        
 

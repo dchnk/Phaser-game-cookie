@@ -73,11 +73,9 @@ class MainScene extends Phaser.Scene {
     this.physics.add.collider(this.cookies, this.cookies, (cookie1, cookie2) => {
       // Расчитаем расстояние и направление от центра взрыва до объекта
       const distance = Phaser.Math.Distance.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
-      console.log(distance)
       if (distance < 100) {
-          console.log('12')
           // Рассчитаем величину взрывной силы
-          const power = 20; // Например, можно указать любую другую величину
+          const power = 50; // Например, можно указать любую другую величину
           // Рассчитаем угол направления отталкивания
           const angle = Phaser.Math.Angle.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
           // Применяем силу к объекту

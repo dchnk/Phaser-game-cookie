@@ -4,12 +4,13 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
 
     this.scene = scene;
 
-    console.log(this.scene.cookies)
     // время жизни в миллисекундах
     this.lifetime = 15000;
+
     // отслеживаем время исчезновения
     this.fadeTime = this.lifetime - 5000;
 
+    // Заносим анимацию в переменную для возможности ее остановить
     this.fadeOutAnimation = null;
 
     // Флаг завершения анимации
@@ -19,14 +20,14 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
     scene.physics.world.enable(this);
     scene.add.existing(this);
 
+    // Меняем коллизию на круг с минимальным радиусом для правильной аниации появления
     this.body.setCircle(1, 0, 0);
+
     // Запуск анимации появления
     this.show();
 
     // Таймер отсчета времени жизни и исчезновения
-    // this.startLifeTimer();
-
-
+    this.startLifeTimer();
   }
 
   // Показывает анимацию появления
@@ -47,39 +48,24 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
         this.body.setDrag(50, 50)
         this.body.setMass(10);
         this.body.setBounce(1)
-        this.setAlpha(1); // Установить непрозрачность после завершения анимации.
-        // this.scene.physics.add.collider(this.scene.cookies, this.scene.cookies, (cookie1, cookie2) => {
-        //   // Расчитаем расстояние и направление от центра взрыва до объекта
-        //   const distance = Phaser.Math.Distance.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
-        //   if (distance < 100) {
-        //     // Рассчитаем величину взрывной силы
-        //     const power = 50; // Например, можно указать любую другую величину
-        //     // Рассчитаем угол направления отталкивания
-        //     const angle = Phaser.Math.Angle.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
-        //     // Применяем силу к объекту
-        //     this.scene.physics.velocityFromRotation(-angle, -power, cookie1.body.velocity);
-        //     this.scene.physics.velocityFromRotation(angle, power, cookie2.body.velocity);
-        //   }
-        // });
+        this.setAlpha(1);
 
-        // Проверяем объекты в заданном радиусе
-        console.log(this.scene.physics.overlap)
-        this.scene.physics.overlap(this, this.scene.cookies, (cookie, object) => {
-        
-          console.log(cookie)
-          // Расчитаем расстояние и направление от центра взрыва до объекта
-          const distance = Phaser.Math.Distance.Between(cookie.x, cookie.y, object.x, object.y);
+        // Создаем эффект отталкивания в момент падения печенек друг на друга
+        this.scene.physics.overlap(this, this.scene.cookies, (cookie, cookie2) => {
+          // Расчитаем расстояние и направление от центра падения до объекта
+          const distance = Phaser.Math.Distance.Between(cookie.x, cookie.y, cookie2.x, cookie2.y);
 
-          if (distance < 100) {
-            // Рассчитаем величину взрывной силы
-            const power = 50; // Например, можно указать любую другую величину
+          if (distance < this.width / 2) {
+            // Устанавливаем силу отталкивания
+            const power = 60;
             // Рассчитаем угол направления отталкивания
-            const angle = Phaser.Math.Angle.Between(cookie.x, cookie.y, object.x, object.y);
+            const angle = Phaser.Math.Angle.Between(cookie.x, cookie.y, cookie2.x, cookie2.y);
             // Применяем силу к объекту
-            this.scene.physics.velocityFromRotation(angle, power, object.body.velocity);
+            this.scene.physics.velocityFromRotation(angle, power, cookie2.body.velocity);
           }
         }, null, this.scene);
-        
+
+        // Добовляем столкновения между печеньками        
         this.scene.physics.add.collider(this.scene.cookies, this.scene.cookies);
 
         this.bounce()

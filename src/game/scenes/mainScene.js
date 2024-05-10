@@ -30,21 +30,18 @@ class MainScene extends Phaser.Scene {
 
     // Создаем карту игрового мира и центрируем ее
     this.gameMap = new GameMap(this, 'map');
-
     // Жестко указываем границы игрового поля
     this.physics.world.setBounds(0, 0, this.gameMap.width, this.gameMap.height);
 
     // Cоздаем персонажа по середине поля
     this.player = new Player(this, this.gameMap.mapImage.width / 2, this.gameMap.mapImage.height / 2, 'hero');
+    // Устанавливаем глубину отрисовки, чтобы персонаж всегда отрисовывался поверх всех слоев
+    this.player.setDepth(10);
 
     // Создаем физическую группу для печенек
     this.cookies = this.physics.add.group({
       classType: Cookie,
     });
-
-    // Устанавливаем глубину отрисовки, чтобы персонаж всегда отрисовывался поверх всех слоев
-
-    this.player.setDepth(10);
 
     // Добавляем коллизии между героем и стенами
     this.physics.add.collider(this.player, this.gameMap.walls);
@@ -57,7 +54,6 @@ class MainScene extends Phaser.Scene {
 
     this.createCookie();
 
-
     // Создание таймера для регулярного создания печеньек
     this.time.addEvent({
       delay: 3000, // Генерация каждые 3 секунды
@@ -68,23 +64,7 @@ class MainScene extends Phaser.Scene {
 
     this.physics.add.overlap(this.player, this.cookies, this.collectCookie, null, this)
 
-    // this.physics.add.collider(this.cookies, this.cookies);
-
     this.physics.add.collider(this.cookies, this.gameMap.walls);
-
-    // this.physics.add.collider(this.cookies, this.cookies, (cookie1, cookie2) => {
-    //   // Расчитаем расстояние и направление от центра взрыва до объекта
-    //   const distance = Phaser.Math.Distance.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
-    //   if (distance < 100) {
-    //     // Рассчитаем величину взрывной силы
-    //     const power = 50; // Например, можно указать любую другую величину
-    //     // Рассчитаем угол направления отталкивания
-    //     const angle = Phaser.Math.Angle.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
-    //     // Применяем силу к объекту
-    //     this.physics.velocityFromRotation(-angle, -power, cookie1.body.velocity);
-    //     this.physics.velocityFromRotation(angle, power, cookie2.body.velocity);
-    //   }
-    // });
 
     this.physics.add.collider(this.player, this.cookies);
 

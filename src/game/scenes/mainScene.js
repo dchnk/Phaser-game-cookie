@@ -70,20 +70,22 @@ class MainScene extends Phaser.Scene {
 
     // this.physics.add.collider(this.cookies, this.cookies);
 
-    this.physics.add.collider(this.cookies, this.cookies, (cookie1, cookie2) => {
-      // Расчитаем расстояние и направление от центра взрыва до объекта
-      const distance = Phaser.Math.Distance.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
-      if (distance < 100) {
-          // Рассчитаем величину взрывной силы
-          const power = 50; // Например, можно указать любую другую величину
-          // Рассчитаем угол направления отталкивания
-          const angle = Phaser.Math.Angle.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
-          // Применяем силу к объекту
-          this.physics.velocityFromRotation(-angle, -power, cookie1.body.velocity);
-          this.physics.velocityFromRotation(angle, power, cookie2.body.velocity);
-      }
-  });
     this.physics.add.collider(this.cookies, this.gameMap.walls);
+
+    // this.physics.add.collider(this.cookies, this.cookies, (cookie1, cookie2) => {
+    //   // Расчитаем расстояние и направление от центра взрыва до объекта
+    //   const distance = Phaser.Math.Distance.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
+    //   if (distance < 100) {
+    //     // Рассчитаем величину взрывной силы
+    //     const power = 50; // Например, можно указать любую другую величину
+    //     // Рассчитаем угол направления отталкивания
+    //     const angle = Phaser.Math.Angle.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
+    //     // Применяем силу к объекту
+    //     this.physics.velocityFromRotation(-angle, -power, cookie1.body.velocity);
+    //     this.physics.velocityFromRotation(angle, power, cookie2.body.velocity);
+    //   }
+    // });
+
     this.physics.add.collider(this.player, this.cookies);
 
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -113,12 +115,10 @@ class MainScene extends Phaser.Scene {
     // const x = Phaser.Math.Between(this.gameMap.cookiesArea.startX, this.gameMap.cookiesArea.endX);
     // const y = Phaser.Math.Between(this.gameMap.cookiesArea.startY, this.gameMap.cookiesArea.endY);
 
-    const x = Phaser.Math.Between(450, 500);
-    const y = Phaser.Math.Between(450, 500);
+    const x = Phaser.Math.Between(480, 500);
+    const y = Phaser.Math.Between(480, 500);
 
     this.cookies.add(new Cookie(this, x, y, 'cookie'));
-
-
   }
 
   collectCookie(player, cookie) {

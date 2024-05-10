@@ -3,6 +3,8 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
     super(scene, x, y, texture);
 
     this.scene = scene;
+
+    console.log(this.scene.cookies)
     // время жизни в миллисекундах
     this.lifetime = 15000;
     // отслеживаем время исчезновения
@@ -44,10 +46,44 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
         this.body.setBounce(1, 1)
         this.body.setDrag(50, 50)
         this.body.setMass(10);
-       
+        this.body.setBounce(1)
+        this.setAlpha(1); // Установить непрозрачность после завершения анимации.
+        // this.scene.physics.add.collider(this.scene.cookies, this.scene.cookies, (cookie1, cookie2) => {
+        //   // Расчитаем расстояние и направление от центра взрыва до объекта
+        //   const distance = Phaser.Math.Distance.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
+        //   if (distance < 100) {
+        //     // Рассчитаем величину взрывной силы
+        //     const power = 50; // Например, можно указать любую другую величину
+        //     // Рассчитаем угол направления отталкивания
+        //     const angle = Phaser.Math.Angle.Between(cookie1.x, cookie1.y, cookie2.x, cookie2.y);
+        //     // Применяем силу к объекту
+        //     this.scene.physics.velocityFromRotation(-angle, -power, cookie1.body.velocity);
+        //     this.scene.physics.velocityFromRotation(angle, power, cookie2.body.velocity);
+        //   }
+        // });
+
+        // Проверяем объекты в заданном радиусе
+        console.log(this.scene.physics.overlap)
+        this.scene.physics.overlap(this, this.scene.cookies, (cookie, object) => {
+        
+          console.log(cookie)
+          // Расчитаем расстояние и направление от центра взрыва до объекта
+          const distance = Phaser.Math.Distance.Between(cookie.x, cookie.y, object.x, object.y);
+
+          if (distance < 100) {
+            // Рассчитаем величину взрывной силы
+            const power = 50; // Например, можно указать любую другую величину
+            // Рассчитаем угол направления отталкивания
+            const angle = Phaser.Math.Angle.Between(cookie.x, cookie.y, object.x, object.y);
+            // Применяем силу к объекту
+            this.scene.physics.velocityFromRotation(angle, power, object.body.velocity);
+          }
+        }, null, this.scene);
+        
+        this.scene.physics.add.collider(this.scene.cookies, this.scene.cookies);
 
         this.bounce()
-        this.setAlpha(1); // Установить непрозрачность после завершения анимации.        
+
       }
     });
   }

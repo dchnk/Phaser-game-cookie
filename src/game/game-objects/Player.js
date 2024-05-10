@@ -1,7 +1,7 @@
 export default class Player extends Phaser.GameObjects.Sprite {
   constructor(scene, x, y, texture, frame) {
     super(scene, x, y, texture, frame);
-
+  
     this.playerVelocity = 160;
     this.direction = 'bottom';
     this.isMoving = false;

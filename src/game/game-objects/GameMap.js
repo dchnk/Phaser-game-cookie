@@ -9,39 +9,34 @@ export default class GameMap {
     this.width = 1200;
 
     this.mapImage = scene.add.image(this.x, this.y, key).setOrigin(0, 0);
-    
+
     this.wallsCollisions = {
       startX: 265,
       endX: 930,
       startY: 265,
       endY: 935
     }
-    
+
     this.cookiesArea = {
       startX: 300,
       endX: 900,
       startY: 190,
       endY: 800
     }
-    
-    this.walls = this.createWalls();
 
+    this.walls = this.createWalls();
   }
 
   createWalls() {
     const walls = this.scene.physics.add.staticGroup();
-
     // Создание верхней стены
-    walls.create(this.width / 2, this.wallsCollisions.startY, 'platform').setScale(22, .5).refreshBody().setVisible(false);
-
+    walls.create(this.width / 2, this.wallsCollisions.startY, 'platform').setSize(690, 20).setVisible(false).setBounce(.5, .5);
     // Создание нижней стены
-    walls.create(this.width / 2, this.wallsCollisions.endY, 'platform').setScale(22, .5).refreshBody().setVisible(false);
-
+    walls.create(this.width / 2, this.wallsCollisions.endY, 'platform').setSize(690, 20).setVisible(false).setBounce(.5, .5);
     // Создание левой стены
-    walls.create(this.wallsCollisions.startX, this.height / 2, 'platform').setScale(.5, 22).refreshBody().setVisible(false);
-
+    walls.create(this.wallsCollisions.startX, this.height / 2, 'platform').setSize(20, 690).setVisible(false).setBounce(.5, .5);
     // Создание правой стены
-    walls.create(this.wallsCollisions.endX, this.height / 2, 'platform').setScale(.5, 22).refreshBody().setVisible(false);
+    walls.create(this.wallsCollisions.endX, this.height / 2, 'platform').setSize(20, 690).setVisible(false).setBounce(.5, .5);
 
     return walls;
   }

@@ -22,21 +22,22 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
 
     // Меняем коллизию на круг с минимальным радиусом для правильной аниации появления
     this.body.setCircle(1, 0, 0);
+    // console.log(this.body)
 
     // Запуск анимации появления
     this.show();
 
     // Таймер отсчета времени жизни и исчезновения
-    this.startLifeTimer();
+    // this.startLifeTimer();
   }
 
   // Показывает анимацию появления
   show() {
     this.setAlpha(0);
-    this.setScale(2);
+    this.setScale(1.2);
     this.scene.tweens.add({
       targets: this,
-      y: `+=100`, // Эффект падения
+      y: `+=200`, // Эффект падения
       alpha: 1, // Непрозрачность
       duration: 400, // Задаём длительность появления
       scale: .18,
@@ -44,10 +45,9 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
       onComplete: () => {
         this.setScale(.2)
         this.body.setCircle(100, 0, 0);
-        this.body.setBounce(1, 1)
-        this.body.setDrag(50, 50)
-        this.body.setMass(10);
-        this.body.setBounce(1)
+        this.body.setBounce(1, 1);
+        this.body.setDrag(200, 200);
+        this.body.setMass(5);
         this.setAlpha(1);
 
         // Создаем эффект отталкивания в момент падения печенек друг на друга
@@ -55,9 +55,9 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
           // Расчитаем расстояние и направление от центра падения до объекта
           const distance = Phaser.Math.Distance.Between(cookie.x, cookie.y, cookie2.x, cookie2.y);
 
-          if (distance < this.width / 2) {
+          if (distance < this.width) {
             // Устанавливаем силу отталкивания
-            const power = 60;
+            const power = 90;
             // Рассчитаем угол направления отталкивания
             const angle = Phaser.Math.Angle.Between(cookie.x, cookie.y, cookie2.x, cookie2.y);
             // Применяем силу к объекту
@@ -65,7 +65,7 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
           }
         }, null, this.scene);
 
-        // Добовляем столкновения между печеньками        
+        // Добовляем столкновения между печеньками
         this.scene.physics.add.collider(this.scene.cookies, this.scene.cookies);
 
         this.bounce()
@@ -73,8 +73,6 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
       }
     });
   }
-
-
 
   bounce() {
     this.scene.tweens.add({

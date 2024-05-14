@@ -1,8 +1,8 @@
 export default class Player extends Phaser.GameObjects.Sprite {
   constructor(scene, x, y, texture, frame) {
     super(scene, x, y, texture, frame);
-  
-    this.playerVelocity = 160;
+
+    this.velocity = 160;
     this.direction = 'bottom';
     this.isMoving = false;
 
@@ -15,19 +15,19 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
     // Инициализируем анимации игрока
     this.initAnimations();
-    
-    
 
     // Устанавливаем параметры игрока
-    this.body.setBounce(0.2);
+    // this.body.setBounce(.5, .5)
 
     // Изменение размеров коллизии персонажа
     this.body.setSize(60, 20, false);
 
     // Смещение коллизии персонажа по оси y
     this.body.setOffset(0, 70);
-    
-    this.body.setCircle(this.width/3, 10, 60);
+
+    this.body.setCircle(this.width / 3, 10, 60);
+
+    // this.body.setImmovable(true)
   }
 
   initAnimations() {
@@ -92,15 +92,16 @@ export default class Player extends Phaser.GameObjects.Sprite {
     }
 
     // Нормализация скорости движения во всех напрвлениях
-    this.body.velocity.normalize().scale(this.playerVelocity);
+    this.body.velocity.normalize().scale(this.velocity);
   }
 
   move(direction, impuls) {
     this.isMoving = direction === 'stop' ? false : true;
-  
+
     // Сброс скоростей
     this.body.setVelocityX(0);
     this.body.setVelocityY(0);
+    this.cookieMove({x: 0, y: 0})
 
     this.direction = direction;
 
@@ -111,63 +112,108 @@ export default class Player extends Phaser.GameObjects.Sprite {
         return;
       };
 
-      this.body.setVelocityX(this.playerVelocity * impuls.x);
-      this.body.setVelocityY(this.playerVelocity * impuls.y * -1);
+      this.body.setVelocityX(this.velocity * impuls.x);
+      this.body.setVelocityY(this.velocity * impuls.y * -1);
+      this.cookieMove(impuls)
       this.anims.play(direction, true);
+
       return;
     }
 
 
     switch (direction) {
       case 'left':
-        this.body.setVelocityX(-this.playerVelocity);
+        this.body.setVelocityX(-this.velocity);
+        this.cookieMove({x: -1, y: 0})
         this.anims.play('left', true);
         break;
 
       case 'right':
-        this.body.setVelocityX(this.playerVelocity);
+        this.body.setVelocityX(this.velocity);
+        this.cookieMove({x: 1, y: 0})
         this.anims.play('right', true);
         break;
 
       case 'up':
-        this.body.setVelocityY(-this.playerVelocity);
+        this.body.setVelocityY(-this.velocity);
+        this.cookieMove({x: 0, y: 1})
         this.anims.play('up', true);
         break;
 
       case 'down':
-        this.body.setVelocityY(this.playerVelocity);
+        this.body.setVelocityY(this.velocity);
+        this.cookieMove({x: 0, y: -1})
         this.anims.play('down', true);
         break;
 
       case 'up-left':
-        this.body.setVelocityX(-this.playerVelocity);
-        this.body.setVelocityY(-this.playerVelocity);
+        this.body.setVelocityX(-this.velocity);
+        this.body.setVelocityY(-this.velocity);
+        this.cookieMove({x: -1, y: 1})
         this.anims.play('up', true);
         break;
 
       case 'up-right':
-        this.body.setVelocityX(this.playerVelocity);
-        this.body.setVelocityY(-this.playerVelocity);
+        this.body.setVelocityX(this.velocity);
+        this.body.setVelocityY(-this.velocity);
+        this.cookieMove({x: 1, y: 1})
         this.anims.play('up', true);
         break;
 
       case 'down-left':
-        this.body.setVelocityX(-this.playerVelocity);
-        this.body.setVelocityY(this.playerVelocity);
+        this.body.setVelocityX(-this.velocity);
+        this.body.setVelocityY(this.velocity);
+        this.cookieMove({x: -1, y: -1})
         this.anims.play('down', true);
         break;
 
       case 'down-right':
-        this.body.setVelocityX(this.playerVelocity);
-        this.body.setVelocityY(this.playerVelocity);
+        this.body.setVelocityX(this.velocity);
+        this.body.setVelocityY(this.velocity);
+        this.cookieMove({x: 1, y: -1})
         this.anims.play('down', true);
         break;
 
 
       default:
         this.anims.play('stop', true)
+        this.cookieMove({x: 0, y: 0})
         this.anims.stop();
         break;
+    }
+  }
+
+
+  cookieMove(impuls) {
+  
+    console.log(impuls)
+  
+    if (this.heldCookie) {
+
+      this.heldCookie.body.setVelocityX(0);
+      this.heldCookie.body.setVelocityY(0);
+
+      if (this.tookAnimateIsDone) {
+        this.heldCookie.x = this.x - 30;
+        this.heldCookie.y = this.y + 10;
+        this.heldCookie.body.setVelocityX(this.velocity * impuls.x);
+        this.heldCookie.body.setVelocityY(this.velocity * impuls.y * -1);
+        return;
+      }
+
+      this.scene.tweens.add({
+        targets: this.heldCookie,
+        x: this.x - 30,
+        y: this.y + 10,
+
+        duration: 200,
+        ease: 'Power2',
+        onComplete: () => {
+          this.tookAnimateIsDone = true;
+          this.heldCookie.body.setVelocityX(this.velocity * impuls.x);
+          this.heldCookie.body.setVelocityY(this.velocity * impuls.y * -1);
+        }
+      })
     }
   }
 }

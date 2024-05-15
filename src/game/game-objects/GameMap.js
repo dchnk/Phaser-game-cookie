@@ -30,13 +30,13 @@ export default class GameMap {
   createWalls() {
     const walls = this.scene.physics.add.staticGroup();
     // Создание верхней стены
-    walls.create(this.width / 2, this.wallsCollisions.startY, 'platform').setSize(690, 20).setVisible(false).setBounce(.5, .5);
+    walls.create(this.width / 2, this.wallsCollisions.startY, 'platform').setSize(690, 20).setVisible(false).top = 'top';
     // Создание нижней стены
-    walls.create(this.width / 2, this.wallsCollisions.endY, 'platform').setSize(690, 20).setVisible(false).setBounce(.5, .5);
+    walls.create(this.width / 2, this.wallsCollisions.endY, 'platform').setSize(690, 20).setVisible(false);
     // Создание левой стены
-    walls.create(this.wallsCollisions.startX, this.height / 2, 'platform').setSize(20, 690).setVisible(false).setBounce(.5, .5);
+    walls.create(this.wallsCollisions.startX, this.height / 2, 'platform').setSize(20, 690).setVisible(false);
     // Создание правой стены
-    walls.create(this.wallsCollisions.endX, this.height / 2, 'platform').setSize(20, 690).setVisible(false).setBounce(.5, .5);
+    walls.create(this.wallsCollisions.endX, this.height / 2, 'platform').setSize(20, 690).setVisible(false);
 
     return walls;
   }

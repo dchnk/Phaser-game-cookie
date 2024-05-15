@@ -2,7 +2,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
   constructor(scene, x, y, texture, frame) {
     super(scene, x, y, texture, frame);
 
-    this.velocity = 160;
+    this.velocity = 140;
     this.direction = 'bottom';
     this.isMoving = false;
 
@@ -101,7 +101,6 @@ export default class Player extends Phaser.GameObjects.Sprite {
     // Сброс скоростей
     this.body.setVelocityX(0);
     this.body.setVelocityY(0);
-    this.cookieMove({x: 0, y: 0})
 
     this.direction = direction;
 
@@ -114,7 +113,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
       this.body.setVelocityX(this.velocity * impuls.x);
       this.body.setVelocityY(this.velocity * impuls.y * -1);
-      this.cookieMove(impuls)
+      this.cookieMove()
       this.anims.play(direction, true);
 
       return;
@@ -124,80 +123,72 @@ export default class Player extends Phaser.GameObjects.Sprite {
     switch (direction) {
       case 'left':
         this.body.setVelocityX(-this.velocity);
-        this.cookieMove({x: -1, y: 0})
         this.anims.play('left', true);
         break;
 
       case 'right':
         this.body.setVelocityX(this.velocity);
-        this.cookieMove({x: 1, y: 0})
         this.anims.play('right', true);
         break;
 
       case 'up':
         this.body.setVelocityY(-this.velocity);
-        this.cookieMove({x: 0, y: 1})
         this.anims.play('up', true);
         break;
 
       case 'down':
         this.body.setVelocityY(this.velocity);
-        this.cookieMove({x: 0, y: -1})
         this.anims.play('down', true);
         break;
 
       case 'up-left':
         this.body.setVelocityX(-this.velocity);
         this.body.setVelocityY(-this.velocity);
-        this.cookieMove({x: -1, y: 1})
         this.anims.play('up', true);
         break;
 
       case 'up-right':
         this.body.setVelocityX(this.velocity);
         this.body.setVelocityY(-this.velocity);
-        this.cookieMove({x: 1, y: 1})
         this.anims.play('up', true);
         break;
 
       case 'down-left':
         this.body.setVelocityX(-this.velocity);
         this.body.setVelocityY(this.velocity);
-        this.cookieMove({x: -1, y: -1})
         this.anims.play('down', true);
         break;
 
       case 'down-right':
         this.body.setVelocityX(this.velocity);
         this.body.setVelocityY(this.velocity);
-        this.cookieMove({x: 1, y: -1})
         this.anims.play('down', true);
         break;
 
 
       default:
         this.anims.play('stop', true)
-        this.cookieMove({x: 0, y: 0})
         this.anims.stop();
         break;
     }
+    
+    this.cookieMove()
   }
 
 
-  cookieMove(impuls) {
-  
-    console.log(impuls)
-  
+  cookieMove() {
+
     if (this.heldCookie) {
 
       this.heldCookie.body.setVelocityX(0);
       this.heldCookie.body.setVelocityY(0);
 
+      this.heldCookie.body.setVelocityX(this.body.velocity.x);
+      this.heldCookie.body.setVelocityY(this.body.velocity.y);
+
       if (this.tookAnimateIsDone) {
         this.heldCookie.x = this.x - 30;
         this.heldCookie.y = this.y + 10;
-        this.heldCookie.body.setVelocityX(this.velocity * impuls.x);
-        this.heldCookie.body.setVelocityY(this.velocity * impuls.y * -1);
         return;
       }
 
@@ -210,8 +201,6 @@ export default class Player extends Phaser.GameObjects.Sprite {
         ease: 'Power2',
         onComplete: () => {
           this.tookAnimateIsDone = true;
-          this.heldCookie.body.setVelocityX(this.velocity * impuls.x);
-          this.heldCookie.body.setVelocityY(this.velocity * impuls.y * -1);
         }
       })
     }

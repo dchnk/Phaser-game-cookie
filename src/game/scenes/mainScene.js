@@ -61,16 +61,19 @@ class MainScene extends Phaser.Scene {
     });
 
     // Добавляем коллизии между героем и стенами
-    this.physics.add.collider(this.player, this.gameMap.walls);
-
-
-
-    // this.physics.add.collider(this.player, this.cookies);
+    this.physics.add.collider(this.player, this.gameMap.walls)
 
     this.physics.add.overlap(this.player, this.cookies, this.collectCookie, null, this)
 
+    this.physics.add.collider(this.player, this.cookies);
 
-    this.physics.add.collider(this.cookies, this.gameMap.walls);
+    this.physics.add.collider(this.cookies, this.gameMap.walls, (cookie, wall) => {
+      // Рассчитаем угол направления отталкивания
+      const angle = Phaser.Math.Angle.Between(cookie.x, cookie.y, this.player.body.x, this.player.body.y);
+      console.log(angle)
+      // Применяем силу к объекту
+      this.physics.velocityFromRotation(angle, 200, cookie.body.velocity);
+    }, null, this);
 
     this.cursors = this.input.keyboard.createCursorKeys();
   }
@@ -88,13 +91,13 @@ class MainScene extends Phaser.Scene {
     //     this.player.heldCookie.body.setVelocityY(0);
     //     return;
     //   };
-      
+
     //   let impuls = Math.abs(this.joystick.impuls.x) >= Math.abs(this.joystick.impuls.y) ? Math.abs(this.joystick.impuls.x) :  Math.abs(this.joystick.impuls.y);
     //   this.physics.moveToObject(this.player.heldCookie, this.player, this.player.velocity * impuls);
 
     // }
-    
-   
+
+
   }
 
   createCookie() {
@@ -113,24 +116,14 @@ class MainScene extends Phaser.Scene {
     if (!cookie.animateIsDone) return;
     if (player.heldCookie) return;
 
-    // Сохраняем ссылку на "собранную" печеньку в свойствах персонажа
-    // cookie.body.enable = false;
+    cookie.body.setCollideWorldBounds(false);
 
-    // cookie.body.stop();
-    // cookie.body.moves = false;
-    // cookie.body.setCollideWorldBounds(false);
-    // cookie.body.setEnable(false);
-    // cookie.setScrollFactor(0);
-
-
+    // Останавливаем анимацию смерти печеньки
     cookie.stopFadeOut()
-
-
+    // Передаем ссылку на печеньку в объект персонажа
     player.heldCookie = cookie;
-
+    // Удаляем печеньки из статик группы печенек на поле
     this.cookies.remove(cookie);
-
-
   }
 }
 

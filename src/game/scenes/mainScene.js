@@ -68,11 +68,11 @@ class MainScene extends Phaser.Scene {
     this.physics.add.collider(this.player, this.cookies);
 
     this.physics.add.collider(this.cookies, this.gameMap.walls, (cookie, wall) => {
+      console.log(wall)
       // Рассчитаем угол направления отталкивания
-      const angle = Phaser.Math.Angle.Between(cookie.x, cookie.y, this.player.body.x, this.player.body.y);
-      console.log(angle)
+      const angle = Phaser.Math.Angle.Between(cookie.x, cookie.y, this.player.body.x, this.player.body.y);      
       // Применяем силу к объекту
-      this.physics.velocityFromRotation(angle, 200, cookie.body.velocity);
+      this.physics.velocityFromRotation(angle, 180, cookie.body.velocity);
     }, null, this);
 
     this.cursors = this.input.keyboard.createCursorKeys();

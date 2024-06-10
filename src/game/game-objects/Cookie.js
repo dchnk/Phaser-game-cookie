@@ -28,7 +28,7 @@ export default class Cookie extends Phaser.GameObjects.Sprite {
     this.show();
 
     // Таймер отсчета времени жизни и исчезновения
-    // this.startLifeTimer();
+    this.startLifeTimer();
   }
 
   // Показывает анимацию появления
